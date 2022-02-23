@@ -1,0 +1,77 @@
+{% extends 'base.html' %}
+{% load cart %}
+{% block title %}Order{% endblock title %}
+{% block content %}
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Serial no.</th>
+      <th scope="col">Image</th>
+      <th scope="col">Name of Product</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Price</th>
+      <th scope="col">Total Price</th>
+      <th scope="col">Date of Purchase</th>  
+      <th scope="col">status</th>         
+    </tr>
+    {% for items in orders %}
+    <tr>
+      <th scope="row">{{forloop.counter}}</th>
+      <th scope="row"><img src="{{items.product.image.url}}" alt="wrong"></th>
+      <th scope="row">{{items.name}}</th>
+      <th scope="row">{{items.quantity}}</th>
+      <th scope="row">{{items.price}}</th>
+      <th scope="row">{{items.price|multiplyprice:items.quantity}}</th>
+      <th scope="row">{{items.date}}</th>
+      <th scope="row">{{items.status}}</th>
+    </tr>
+    {% endfor %}
+    <tfoot>
+      <tr align="center">
+        <th colspan=5>Total Pay</th>
+        <th>{{tp}}</th>
+        <th></th>
+      </tr>
+    </tfoot>
+  </thead>
+  <tr>
+    <td>
+    </td>
+  </tr>
+</table>
+<script src="https://www.paypal.com/sdk/js?client-id=AQP0yO2_ycCUkjW5X09UQD5kxWccOt0X6lhkIkaQZI390SXhPfqQm1vbFR1YLz283mDwT9oa1suNYj-t=INR"></script>
+<div id="paypal-button-container"></div>
+<script>paypal.Buttons({
+  style:{
+    layout:'vertical',
+    color:'blue',
+    shape:'rect',
+    label:'paypal',
+  },
+  // Sets up the transaction when a payment button is clicked
+  createOrder: function(data, actions) {
+    return actions.order.create({
+      purchase_units: [{
+      amount: {
+      value: '77.44' // Can reference variables or functions. Example: `value: document.getElementById('...').value`
+    }
+  }]
+});
+},
+// Finalize the transaction after payer approval
+onApprove: function(data, actions) {
+  return actions.order.capture().then(function(orderData) {
+  // Successful capture! For dev/demo purposes:
+  console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+  var transaction = orderData.purchase_units[0].payments.captures[0];
+  alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+  // When ready to go live, remove the alert and show a success message within this page. For example:
+  // var element = document.getElementById('paypal-button-container');
+  // element.innerHTML = '';
+  // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+  // Or go to another URL:  actions.redirect('thank_you.html');
+});
+}
+}).render('#paypal-button-container');
+</script>
+{% endblock content %}

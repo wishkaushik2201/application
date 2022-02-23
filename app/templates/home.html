@@ -1,0 +1,210 @@
+{% extends 'base.html' %}
+{% load cart %}
+{% block title %}HOME{% endblock title %}
+{% comment %} <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body> {% endcomment %}
+  {% block content %}
+  {% comment %} {{ request.session.email }}
+  {{error_msg}}
+{% if request.session.email %}
+<form method="POST" action="{% url 'logout' %}">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-primary mx-2">log Out</button>
+</form><br>
+<form method="POST" action="{% url 'order' %}">
+  {% csrf_token %}
+  <button type="submit"class="btn btn-primary mx-2">Order</button>
+</form>
+{% else %} 
+  <!-- Button trigger modal -->
+ <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#signup">
+  Sign Up
+</button> 
+
+<!-- Modal -->
+ <div class="modal fade" id="signup" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">SignUp</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post"  action = "{% url 'login_in' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="username1" class="form-label">User Name</label>
+            <input type="text" name="username" class="form-control" id="username1">
+            </div>
+          <div class="mb-3">
+            <label for="passw1" class="form-label">Password</label>
+            <input type="password" name="passw" class="form-control" id="passw1">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">log In</button>
+        </div>
+          </form>
+      </div>
+       <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="summit" class="btn btn-primary">Save changes</button>
+      </div> 
+    </div>
+    .
+  </div>
+</div>
+<!-- Button trigger modal -->
+
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#login">
+  Log In
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="login" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalLabel">Log In</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form method="post"  action = "{% url 'sign_in' %}">
+          {% csrf_token %}
+          <div class="mb-3">
+            <label for="username1" class="form-label">User Name</label>
+            <input type="text" name="username2" class="form-control" id="username1">
+            </div>
+          <div class="mb-3">
+            <label for="passw1" class="form-label">Password</label>
+            <input type="password" name="passw2" class="form-control" id="passw1">
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              <button type="submit" class="btn btn-primary">log In</button>
+        </div>
+          </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="summit" class="btn btn-primary">Save changes</button>
+      </div> 
+    </div>
+  </div>
+</div>
+{% endif %}{% endcomment %}
+  {% comment %} <div class="modal" tabindex="-1"> 
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Modal title</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form method="post"  action = "{% url 'login_in' %}">
+            {% csrf_token %}
+            <div class="mb-3">
+              <label for="username1" class="form-label">User Name</label>
+              <input type="text" name="username" class="form-control" id="username1">
+              </div>
+            <div class="mb-3">
+              <label for="passw1" class="form-label">Password</label>
+              <input type="password" name="passw" class="form-control" id="passw1">
+              </div>
+            <button type="submit" class="btn btn-primary">log In</button>
+            </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+          <button type="button" class="btn btn-primary">Save changes</button>
+        </div>
+      </div>
+    </div>
+  </div>
+   {% endcomment %}
+   {% comment %} <div class="container">
+     <div class="row">
+       <div class="col-lg-3">
+         <div class="list-group">
+           {% for category in cate %}
+           <a aria-current="true" href="/home/?category={{cate.id}}" class="list-group-item list-group-item-action">
+             {{category}}
+            </a>
+           {% endfor %}
+         </div>
+       </div>
+     </div>
+   </div> {% endcomment %}
+   <div class="container">
+     <div class="dropdown">
+       <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton1" data-bs-toggle="dropdown" aria-expanded="false">
+         Choose Category
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton1">
+          <li>
+            {% for category in cate %}
+            <a aria-current="true" href="/home/?category={{category.id}}" class="list-group-item list-group-item-action">
+              {{category.name}}
+            </a>
+            {% endfor %}
+          </li>
+        </ul>
+      </div>
+      <div class=" col-lg-9 mx-auto" id="product">
+        <div class="row my-3 mx-auto">
+          {% for img in path %}
+          <div class=" col-lg-9 mx-auto" >
+            <div class="row my-3 mx-auto">
+              <div class="card mx-auto mb-3" style="width: 18rem;">
+                <img src="{{img.image.url}}" class="card-img-top" alt="Camera">
+                <div class="card-body">
+                  <h5 class="card-title">{{img.name}}</h5>
+                  <p class="card-text">Rs. {{img.price}}</p>
+                  <div class="card-footer row no-gutter">
+                    {% if img|isexistincart:request.session.cart %}
+                      <form action="/home/#{{img.id}}" method ="post" class="col-2">
+                        {% csrf_token %}
+                        <input type="text" name="cartid" value={{img.id}} hidden>
+                        <input type="text" name="minus" value="True" hidden>
+                        <input type="submit" value="-" class="btn btn-block btn-dark">
+                      </form>
+                    <div class="text-center col">
+                      {{img|cartquant:request.session.cart}}
+                    </div>
+                      <form action="/home/#{{img.id}}" method ="post" class="col-2">
+                        {% csrf_token %}
+                        <input type="text" name="cartid" value="{{img.id}}" hidden>
+                        <input type="submit" value="+" class="btn btn-block btn-dark">
+                      </form>
+                    {% else %}
+                    <form action="/home/#{{img.id}}" method ="post" class="btn-block">
+                      {% csrf_token %}
+                      <input type="text" name="cartid" value="{{img.id}}" hidden>
+                      <input type="submit" value="Add to cart" class="btn btn-block btn-primary form-control">
+                    </form>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          {% endfor %}
+        </div>
+      </div>
+    </div>
+    <script>
+      if (window.history.replaceState){
+        window.history.replaceState(null,null,window.location.hef);
+      }
+    </script>
+    {% endblock content %}
+  
+{% comment %} </body>
+</html> {% endcomment %}
