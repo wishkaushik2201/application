@@ -7,8 +7,13 @@ from .models import login_user, upload_image,product,category,order
 from django.contrib.auth.hashers import make_password, check_password
 import datetime
 # Create your views here.
+
+
 def home(request):
+    request.session["cartcheck"]=0
+
     if request.method=="POST":
+        request.session["cartcheck"]=1
         product_id = request.POST.get('cartid')
         remove=request.POST.get('minus')
         cart_id= request.session.get('cart')
@@ -63,10 +68,13 @@ def log(request):
     return render(request,'home')
 
 def cart(request):
-    ids=list(request.session.get("cart").keys())
-    cart_pro=product.objects.filter(id__in = ids)
-    print(cart_pro)
-    return render(request,"cart.html",{'cart_pro':cart_pro})
+    if request.session["cartcheck"]==1:
+        ids=list(request.session.get("cart").keys())
+        cart_pro=product.objects.filter(id__in = ids)
+        print(cart_pro)
+        return render(request,"cart.html",{'cart_pro':cart_pro})
+    else:
+        return render(request,"cart.html")
     # if request.method=="POST":
     #     if request.session.username:
     #         ids=list(request.session.get("cart").keys())
