@@ -34,16 +34,25 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
+    #new name
+      - name: Check out repository
       - uses: actions/checkout@v4
-
+      #new name
+      - name: Install poetry
+      - run: pipx install poetry 
+      #end lines
       - name: Set up Python version
         uses: actions/setup-python@v3.0.0
         with:
           python-version: ${{ env.PYTHON_VERSION }}
           cache: 'pip'
-
+          #newline
+          cache-dependency-path: '**/poetry.lock'
+          #new 2 lines
+      - run: poetry init 
+      - run: poetry install
+      #end lines
       - name: Create and start virtual environment
         run: |
           python -m venv venv
