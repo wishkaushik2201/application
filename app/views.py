@@ -2,13 +2,22 @@
 from distutils.log import error
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import redirect, render
-from sympy import O
-from .models import login_user, upload_image,product,category,order
+from sympy import O, im
+from .models import demodb, login_user, upload_image,product,category,order
 from django.contrib.auth.hashers import make_password, check_password
 import datetime
+import django.core.mail.backends
+from rest_framework import routers,serializers,viewsets
+from .serializers import demo_rest
+
 # Create your views here.
+from django.core.mail import send_mail
+
 def home(request):
+    request.session["cartcheck"]=0
+
     if request.method=="POST":
+        request.session["cartcheck"]=1
         product_id = request.POST.get('cartid')
         remove=request.POST.get('minus')
         cart_id= request.session.get('cart')
@@ -59,14 +68,24 @@ def log(request):
         except:
             contact=login_user(username=username, passw=make_password(passw))
             contact.save()
+            print("-------------------")
+            send_mail(
+                "subject is here",
+                'here is the message.',
+                "sharma.vishal.2201@gmail.com",
+                ["vs42653@gmail.com"]
+            )
             return HttpResponseRedirect("contact/")
     return render(request,'home')
 
 def cart(request):
-    ids=list(request.session.get("cart").keys())
-    cart_pro=product.objects.filter(id__in = ids)
-    print(cart_pro)
-    return render(request,"cart.html",{'cart_pro':cart_pro})
+    if request.session["cartcheck"]==1:
+        ids=list(request.session.get("cart").keys())
+        cart_pro=product.objects.filter(id__in = ids)
+        print(cart_pro)
+        return render(request,"cart.html",{'cart_pro':cart_pro})
+    else:
+        return render(request,"cart.html")
     # if request.method=="POST":
     #     if request.session.username:
     #         ids=list(request.session.get("cart").keys())
@@ -132,3 +151,7 @@ def order_dtls(request):
         tp=tp+(i.price *i.quantity)
         print(tp)
     return render(request,'order.html',{'orders':orders,"tp":tp})
+
+class demo_REST(viewsets.ModelViewSet):
+    queryset=demodb.objects.all()
+    serializer_class=demo_rest

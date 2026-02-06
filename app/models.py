@@ -58,3 +58,11 @@ class order(models.Model):
     status=models.BooleanField(default=False)
     def __str__(self):
         return self.address
+
+class demodb(models.Model):
+    name=models.CharField(max_length=50)
+    email=models.CharField(max_length=255)
+
+    def __str__(self):
+        return self.name
+    

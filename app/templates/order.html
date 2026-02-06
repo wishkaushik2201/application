@@ -39,39 +39,95 @@
     </td>
   </tr>
 </table>
-<script src="https://www.paypal.com/sdk/js?client-id=AQP0yO2_ycCUkjW5X09UQD5kxWccOt0X6lhkIkaQZI390SXhPfqQm1vbFR1YLz283mDwT9oa1suNYj-t=INR"></script>
-<div id="paypal-button-container"></div>
-<script>paypal.Buttons({
-  style:{
-    layout:'vertical',
-    color:'blue',
-    shape:'rect',
-    label:'paypal',
+<div id="paypal-button-container" style ="float:right"></div>
+            
+        </div>
+        
+    </div>
+
+    <!-- Include the PayPal JavaScript SDK; replace "test" with your own sandbox Business account app client ID -->
+
+    <script src="https://www.paypal.com/sdk/js?client-id=AXpyqrWyE6lyJm_tdZOK6wzABswHy8FAWZaYW4E7J2jIxNeJZesb2QakIUFyrq7d55z99xzY8CAVqGJm&currency=USD"></script>
+
+
+    <!-- Set up a container element for the button -->
+
+    
+
+
+    <script>
+
+      paypal.Buttons({
+        style: {
+
+    layout:  'vertical',
+
+    color:   'blue',
+
+    shape:   'rect',
+
+    label:   'paypal',
+
+    width:'100px',
+    align:'center'
+
   },
-  // Sets up the transaction when a payment button is clicked
-  createOrder: function(data, actions) {
-    return actions.order.create({
-      purchase_units: [{
-      amount: {
-      value: '77.44' // Can reference variables or functions. Example: `value: document.getElementById('...').value`
-    }
-  }]
-});
-},
-// Finalize the transaction after payer approval
-onApprove: function(data, actions) {
-  return actions.order.capture().then(function(orderData) {
-  // Successful capture! For dev/demo purposes:
-  console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
-  var transaction = orderData.purchase_units[0].payments.captures[0];
-  alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
-  // When ready to go live, remove the alert and show a success message within this page. For example:
-  // var element = document.getElementById('paypal-button-container');
-  // element.innerHTML = '';
-  // element.innerHTML = '<h3>Thank you for your payment!</h3>';
-  // Or go to another URL:  actions.redirect('thank_you.html');
-});
-}
-}).render('#paypal-button-container');
-</script>
+
+        // Sets up the transaction when a payment button is clicked
+
+        createOrder: function(data, actions) {
+
+          return actions.order.create({
+
+            purchase_units: [{
+
+              amount: {
+
+                value: '{{tp.currency}}' // Can reference variables or functions. Example: `value: document.getElementById('...').value`
+
+              }
+
+            }]
+
+          });
+
+        },
+
+
+        // Finalize the transaction after payer approval
+
+        onApprove: function(data, actions) {
+
+          return actions.order.capture().then(function(orderData) {
+
+            // Successful capture! For dev/demo purposes:
+
+                console.log('Capture result', orderData, JSON.stringify(orderData, null, 2));
+
+                var transaction = orderData.purchase_units[0].payments.captures[0];
+
+                alert('Transaction '+ transaction.status + ': ' + transaction.id + '\n\nSee console for all available details');
+
+
+            // When ready to go live, remove the alert and show a success message within this page. For example:
+
+            // var element = document.getElementById('paypal-button-container');
+
+            // element.innerHTML = '';
+
+            // element.innerHTML = '<h3>Thank you for your payment!</h3>';
+
+            // Or go to another URL:  actions.redirect('thank_you.html');
+
+          });
+
+        }
+
+      }).render('#paypal-button-container');
+
+
+    </script>
+
+
+
 {% endblock content %}
